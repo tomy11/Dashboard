@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
-
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -18,14 +18,18 @@ export class SignupComponent implements OnInit {
   })
 
 
-  constructor(private service: AuthService){}
+  constructor(private router: Router, private service: AuthService){}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onSubmit(): void {
-    //this.service.signup(this.register.value);
-    console.log(this.register.value);
-
+    this.service.signup(this.register.value).subscribe({
+      next: (v) => {
+        console.log('save success')
+        this.router.navigate(['/']);
+      },
+      error: (e) => console.error(e),
+      complete: () => console.info('complete')
+    })
   }
 }
